@@ -11,12 +11,12 @@ gitops:
         harness.io/envRef: ""
     spec:
       source:
-        repoURL: https://github.com/GITHUB_USERNAME/harness-gitops-workshop
+        repoURL: https://github.com/hala-elali/harness-gitops-workshop
         path: configs/git-generator-files-discovery
         targetRevision: main
       destination:
         server: https://kubernetes.default.svc
         namespace: default
-  agentIdentifier: AGENT_NAME
+  agentIdentifier: gitopsagent
   clusterIdentifier: gitopscluster
   repoIdentifier: gitopsrepo
