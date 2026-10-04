@@ -18,5 +18,5 @@ gitops:
         server: https://kubernetes.default.svc
         namespace: default
   agentIdentifier: gitopsagent
-  clusterIdentifier: gitopscluster
+  clusterIdentifier: in-cluster
   repoIdentifier: gitopsrepo
