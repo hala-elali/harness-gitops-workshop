@@ -5,3 +5,5 @@ In this workshop, we'll use the Harness CI, CD, and GitOps modules to demonstrat
 ![PR Pipeline Architecture](assets/pr-pipeline-architecture.png)
 
 To follow this tutorial, visit [Harness Developer Hub](https://developer.harness.io/tutorials/cd-pipelines/unified-cicd/e2e-pipeline).
+
+## Testing
