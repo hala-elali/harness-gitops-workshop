@@ -3,18 +3,23 @@ resource "harness_platform_pipeline" "cicdgitopspipeline" {
   org_id     = var.org_id
   project_id = var.project_id
   name       = "cicd-gitops-pipeline"
-  depends_on = [harness_platform_gitops_applications.podinfo, harness_platform_service.gitops_service]
+  depends_on = [
+    harness_platform_gitops_applications.podinfo,
+    harness_platform_service.gitops_service,
+    harness_platform_environment_clusters_mapping.dev_env_cluster_mapping,
+    harness_platform_environment_clusters_mapping.prod_env_cluster_mapping,
+  ]
   yaml = <<-EOT
 pipeline:
   name: cicd-gitops-pipeline
   identifier: cicdgitopspipeline
-  projectIdentifier: default_project
-  orgIdentifier: default
+  projectIdentifier: ${var.project_id}
+  orgIdentifier: ${var.org_id}
   tags: {}
   properties:
     ci:
       codebase:
-        connectorRef: github_appset_repo_connector
+        connectorRef: account.${harness_platform_connector_github.github_appset_repo_connector.identifier}
         build: <+input>
   stages:
     - stage:
@@ -47,11 +52,12 @@ pipeline:
                   name: BuildAndPushDockerRegistry
                   identifier: BuildAndPushDockerRegistry
                   spec:
-                    connectorRef: dockerhub_connector
+                    connectorRef: account.${harness_platform_connector_docker.dockerhub_connector.identifier}
                     repo: <+pipeline.variables.imageRepo>
                     tags:
                       - <+pipeline.variables.imageTag>
                     dockerfile: apps/podinfo/Dockerfile
+                    context: apps/podinfo
     - stage:
         name: Deploy to Dev
         identifier: Deploy_to_Dev
@@ -61,7 +67,7 @@ pipeline:
           deploymentType: Kubernetes
           gitOpsEnabled: true
           service:
-            serviceRef: podinfoservice
+            serviceRef: ${harness_platform_service.gitops_service.identifier}
           execution:
             steps:
               - step:
@@ -89,10 +95,10 @@ pipeline:
                   spec: {}
             rollbackSteps: []
           environment:
-            environmentRef: dev
+            environmentRef: ${harness_platform_environment.gitops_dev_env.identifier}
             deployToAll: false
             gitOpsClusters:
-              - identifier: podinfocluster
+              - identifier: ${harness_platform_gitops_cluster.gitops_cluster.identifier}
         tags: {}
         failureStrategies:
           - onFailure:
@@ -135,7 +141,7 @@ pipeline:
           deploymentType: Kubernetes
           gitOpsEnabled: true
           service:
-            serviceRef: podinfoservice
+            serviceRef: ${harness_platform_service.gitops_service.identifier}
           execution:
             steps:
               - step:
@@ -163,10 +169,10 @@ pipeline:
                   spec: {}
             rollbackSteps: []
           environment:
-            environmentRef: prod
+            environmentRef: ${harness_platform_environment.gitops_prod_env.identifier}
             deployToAll: false
             gitOpsClusters:
-              - identifier: podinfocluster
+              - identifier: ${harness_platform_gitops_cluster.gitops_cluster.identifier}
         tags: {}
         failureStrategies:
           - onFailure:
@@ -179,7 +185,7 @@ pipeline:
       type: String
       description: ""
       required: false
-      value: var.github_username/harness-gitops-workshop
+      value: ${var.dockerhub_username}/harness-gitops-workshop
     - name: imageTag
       type: String
       description: ""
