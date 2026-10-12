@@ -41,9 +41,9 @@ resource "harness_platform_gitops_applications" "podinfo" {
   org_id     = var.org_id
   account_id = var.account_id
   identifier = "podinfoappset"
-  cluster_id = var.cluster_identifier
-  repo_id    = var.repo_identifier
-  agent_id   = var.agent_identifier
+  cluster_id = harness_platform_gitops_cluster.gitops_cluster.identifier
+  repo_id    = harness_platform_gitops_repository.gitops_repo.identifier
+  agent_id   = harness_platform_gitops_agent.gitops_agent.identifier
   name       = "podinfoappset"
   depends_on = [harness_platform_service.gitops_service]
 }

@@ -41,6 +41,7 @@ variable "dockerhub_username" {
 variable "dockerhub_pat" {
     type = string
     default = ""
+    sensitive = true
 }
 
 variable "github_username" {
@@ -51,6 +52,7 @@ variable "github_username" {
 variable "github_pat" {
     type = string
     default = ""
+    sensitive = true
 }
 
 variable "repo_identifier" {
@@ -96,9 +98,21 @@ variable "service_name" {
 variable "harness_api_token" {
     type = string
     default = ""
+    sensitive = true
 }
 
 variable "delegate_token" {
     type = string
     default = ""
+    sensitive = true
+}
+
+variable "delegate_manager_endpoint" {
+    type = string
+    default = "https://app.harness.io"
+}
+
+variable "delegate_image" {
+    type = string
+    default = "harness/delegate:23.11.81601"
 }

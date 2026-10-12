@@ -22,3 +22,10 @@ go.work
 
 # macOS specific
 .DS_Store
+# Terraform / Terragrunt
+.terraform/
+*.tfstate
+*.tfstate.*
+.terragrunt-cache/
+# Generated GitOps agent manifest (contains agent credentials)
+terraform/resources/gitops_agent.yaml
